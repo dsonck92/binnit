@@ -23,6 +23,7 @@ _testmain.go
 *.test
 *.prof
 dive.log
+stuff.txt
 /.GOPATH
 /bin
 /binnit

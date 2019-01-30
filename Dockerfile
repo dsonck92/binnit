@@ -11,8 +11,12 @@ FROM scratch
 COPY --from=build-env /stuff /
 
 COPY binnit /binnit/
+COPY conf/binnit.cfg /binnit/conf/
+COPY tpl/* /binnit/tpl/
+COPY static/* /binnit/static/
 
-# Export our volumes
+# Export our volumes so directories
+# can be bind mounted
 VOLUME /binnit/conf
 VOLUME /binnit/log
 VOLUME /binnit/static
@@ -20,7 +24,7 @@ VOLUME /binnit/tpl
 VOLUME /binnit/paste
 
 # Set our port
-EXPOSE 8080
+EXPOSE 80
 WORKDIR /binnit
 
 # Run the binary.
