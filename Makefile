@@ -46,4 +46,4 @@ Q                := $(if $V,,@)
 IMPORT_PATH      := $(shell awk -F" " '$$1=="module"{print $$2;exit;}' go.mod)
 VERSION          := $(shell git describe --tags --always --dirty="-dev")
 DATE             := $(shell date -u '+%Y-%m-%d-%H%M UTC')
-VERSION_FLAGS    := -ldflags='-X "main.Version=$(VERSION)" -X "main.BuildTime=$(DATE)"'
+VERSION_FLAGS    := -ldflags='-s -w -X "main.Version=$(VERSION)" -X "main.BuildTime=$(DATE)"'
