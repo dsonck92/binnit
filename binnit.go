@@ -46,7 +46,7 @@ var (
 )
 
 var (
-	confFile = flag.String("c", "./binnit.cfg", "Configuration file for binnit")
+	confFile = flag.String("c", "binnit.cfg", "Configuration file for binnit")
 	v        = flag.Bool("v", false, "print binnit version and build time")
 	logger   *log.Logger
 	storage  StorageBackend
@@ -56,12 +56,12 @@ var pConf = config{
 	serverName: "localhost",
 	bindAddr:   "0.0.0.0",
 	bindPort:   "8080",
-	pasteDir:   "./paste",
-	templDir:   "./tpl",
-	staticDir:  "./static",
+	pasteDir:   "paste",
+	templDir:   "tpl",
+	staticDir:  "static",
 	storage:    "fs",
 	maxSize:    4096,
-	logFile:    "./log/binnit.log",
+	logFile:    "log/binnit.log",
 }
 
 type paste struct {
@@ -76,7 +76,7 @@ func setLogger() *log.Logger {
 	f, err := os.OpenFile(pConf.logFile, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0600)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error opening log file: %s. Exiting\n", pConf.logFile)
-		if f, errC := os.Create(pConf.logFile); errC != nil {
+		if f, err = os.Create(pConf.logFile); err != nil {
 			os.Exit(1)
 		}
 	}
@@ -240,6 +240,7 @@ func init() {
 	logger.Printf("  + Serving pastes on: %s\n", pConf.serverName)
 	logger.Printf("  + listening on: %s:%s\n", pConf.bindAddr, pConf.bindPort)
 	logger.Printf("  + paste_dir: %s\n", pConf.pasteDir)
+	logger.Printf("  + log_file: %s\n", pConf.logFile)
 	logger.Printf("  + static_dir: %s\n", pConf.staticDir)
 	logger.Printf("  + storage: %s\n", pConf.storage)
 	logger.Printf("  + templ_dir: %s\n", pConf.templDir)
