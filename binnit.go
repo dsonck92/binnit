@@ -76,9 +76,11 @@ func setLogger() *log.Logger {
 	f, err := os.OpenFile(pConf.logFile, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0600)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error opening log file: %s. Exiting\n", pConf.logFile)
-		os.Exit(1)
+		if f, errC := os.Create(pConf.logFile); errC != nil {
+			os.Exit(1)
+		}
 	}
-	logger = log.New(io.Writer(f), "[binnit:]: ", log.Ldate|log.Ltime|log.Lmicroseconds)
+	logger = log.New(io.Writer(f), "[binnit]: ", log.Ldate|log.Ltime|log.Lmicroseconds)
 	return logger
 }
 

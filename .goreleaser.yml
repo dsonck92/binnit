@@ -2,11 +2,12 @@
 before:
   hooks:
     - make clean
+    - go mod download
 builds:
   - env:
     - CGO_ENABLED=0
     ldflags:
-      - -s -w -X main.Version={{.VERSION}} -X main.BuildTime={{.Date}}
+      - -s -w -X main.Version={{.Version}} -X main.BuildTime={{.Date}}
     goos:
       - linux
     goarch:
@@ -15,9 +16,27 @@ builds:
       - arm64
 archive:
   replacements:
-    linux: Linux
     386: i386
-    amd64: x86_64
+  files:
+    - LICENSE.md
+    - README.md
+    - tpl/*
+    - static/*
+    - log
+    - paste
+    - conf/binnit.cfg
+  wrap_in_directory: binnit
+dockers:
+  -
+    goos:
+      linux
+    goarch:
+      amd64
+    image_templates:
+      - "karasz/binnit:latest"
+      - "karasz/binnit:{{ .Tag }}"
+    skip_push: true
+    dockerfile: Dockerfile
 checksum:
   name_template: 'checksums.txt'
 snapshot:
