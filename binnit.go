@@ -47,7 +47,7 @@ var (
 
 var (
 	confFile = flag.String("c", "./binnit.cfg", "Configuration file for binnit")
-	version  = flag.Bool("v", false, "print binnit version and build time")
+	v        = flag.Bool("v", false, "print binnit version and build time")
 	logger   *log.Logger
 	storage  StorageBackend
 )
@@ -246,7 +246,7 @@ func init() {
 
 func main() {
 
-	if *version {
+	if *v {
 		fmt.Println(Version, BuildTime)
 		os.Exit(0)
 	}
