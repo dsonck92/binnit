@@ -33,9 +33,8 @@ dockers:
     goarch:
       amd64
     image_templates:
-      - "karasz/binnit:latest"
-      - "karasz/binnit:{{ .Tag }}"
-    skip_push: true
+      - "docker.io/karasz/binnit:latest"
+      - "docker.io/karasz/binnit:{{ .Tag }}"
     dockerfile: Dockerfile
     extra_files:
       - conf/
