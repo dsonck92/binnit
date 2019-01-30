@@ -37,6 +37,10 @@ dockers:
       - "karasz/binnit:{{ .Tag }}"
     skip_push: true
     dockerfile: Dockerfile
+    extra_files:
+      - conf/
+      - static/
+      - tpl/
 checksum:
   name_template: 'checksums.txt'
 snapshot:

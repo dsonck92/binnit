@@ -11,9 +11,9 @@ FROM scratch
 COPY --from=build-env /stuff /
 
 COPY binnit /binnit/
-COPY conf/binnit.cfg /binnit/conf/
-COPY tpl/* /binnit/tpl/
-COPY static/* /binnit/static/
+COPY ./conf/binnit.cfg /binnit/conf/
+COPY ./tpl/* /binnit/tpl/
+COPY ./static/* /binnit/static/
 
 # Export our volumes so directories
 # can be bind mounted
