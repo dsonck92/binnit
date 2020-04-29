@@ -1,4 +1,4 @@
-package main
+package storage
 
 //StorageBackend is the storage backend interface
 type StorageBackend interface {

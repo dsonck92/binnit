@@ -1,31 +1,36 @@
-FROM busybox AS build-env
-RUN mkdir /stuff
-RUN mkdir /stuff/binnit
-RUN mkdir /stuff/binnit/conf
-RUN mkdir /stuff/binnit/log
-RUN mkdir /stuff/binnit/static
-RUN mkdir /stuff/binnit/tpl
-RUN mkdir /stuff/binnit/paste
+FROM golang:1.13.7 as builder
+
+ENV BUILD_DIR /build
+
+ARG UID=1000
+
+RUN mkdir -p ${BUILD_DIR}
+WORKDIR ${BUILD_DIR}
+
+COPY go.* ./
+RUN go mod download
+COPY . .
+
+RUN go test -cover ./...
+RUN CGO_ENABLED=0 go build -a -tags netgo -installsuffix netgo -o /binnit /build/bin/binnit
+
+RUN adduser --system --no-create-home --uid $UID --shell /usr/sbin/nologin static
+RUN setcap cap_net_bind_service=+ep /binnit
 
 FROM scratch
-COPY --from=build-env /stuff /
+COPY --from=builder /binnit /
+COPY --from=builder /etc/passwd /etc/passwd
 
-COPY binnit /binnit/
-COPY ./conf/binnit.cfg /binnit/conf/
-COPY ./tpl/* /binnit/tpl/
-COPY ./static/* /binnit/static/
+COPY ./conf/binnit.cfg /conf/
+COPY ./tpl/* /tpl/
+COPY ./static/* /static/
 
-# Export our volumes so directories
-# can be bind mounted
-VOLUME /binnit/conf
-VOLUME /binnit/log
-VOLUME /binnit/static
-VOLUME /binnit/tpl
-VOLUME /binnit/paste
+VOLUME /log
+VOLUME /paste
 
 # Set our port
 EXPOSE 80
-WORKDIR /binnit
+WORKDIR /
 
 # Run the binary.
-ENTRYPOINT ["./binnit","-c","conf/binnit.cfg"]
+ENTRYPOINT ["/binnit","-c","/conf/binnit.cfg"]
