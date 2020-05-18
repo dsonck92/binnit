@@ -196,11 +196,11 @@ func handlePutPaste(w http.ResponseWriter, r *http.Request) {
 			}
 			if port != string(80) && port != string(443) {
 				fmt.Fprintf(w, "<html><body>Link: <a href='%s://%s:%s/%s'>%s://%s:%s/%s</a></body></html>",
-					scheme,	hostname, port, ID, hostname, port, ID)
+					scheme,	hostname, port, ID, scheme, hostname, port, ID)
 				return
 			}
 			fmt.Fprintf(w, "<html><body>Link: <a href='%s://%s/%s'>%s://%s/%s</a></body></html>",
-				scheme, hostname, ID, hostname, ID)
+				scheme, hostname, ID, scheme, hostname, ID)
 			return
 
 		}
