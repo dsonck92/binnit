@@ -28,7 +28,6 @@ import (
 	"fmt"
 	"html"
 	"html/template"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -75,14 +74,7 @@ type paste struct {
 }
 
 func setLogger() *log.Logger {
-	f, err := os.OpenFile(pConf.LogFile, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0600)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error opening log file: %s. Exiting\n", pConf.LogFile)
-		if f, err = os.Create(pConf.LogFile); err != nil {
-			os.Exit(1)
-		}
-	}
-	logger = log.New(io.Writer(f), "[binnit]: ", log.Ldate|log.Ltime|log.Lmicroseconds)
+	logger = log.New(os.Stderr, "[binnit]: ", log.Ldate|log.Ltime|log.Lmicroseconds)
 	return logger
 }
 
@@ -195,19 +187,20 @@ func handlePutPaste(w http.ResponseWriter, r *http.Request) {
 		logger.Printf("   ID: %s; err: %v\n", ID, err)
 
 		if err == nil {
+			scheme := pConf.Scheme
 			hostname := pConf.ServerName
 			port := pConf.BindPort
 			if show := reqBody.Get("show"); show != "1" {
-				fmt.Fprintf(w, "http://%s/%s\n", hostname, ID)
+				fmt.Fprintf(w, "%s://%s/%s\n", scheme, hostname, ID)
 				return
 			}
 			if port != string(80) && port != string(443) {
-				fmt.Fprintf(w, "<html><body>Link: <a href='http://%s:%s/%s'>http://%s:%s/%s</a></body></html>",
-					hostname, port, ID, hostname, port, ID)
+				fmt.Fprintf(w, "<html><body>Link: <a href='%s://%s:%s/%s'>%s://%s:%s/%s</a></body></html>",
+					scheme,	hostname, port, ID, hostname, port, ID)
 				return
 			}
-			fmt.Fprintf(w, "<html><body>Link: <a href='http://%s/%s'>http://%s/%s</a></body></html>",
-				hostname, ID, hostname, ID)
+			fmt.Fprintf(w, "<html><body>Link: <a href='%s://%s/%s'>%s://%s/%s</a></body></html>",
+				scheme, hostname, ID, hostname, ID)
 			return
 
 		}

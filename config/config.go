@@ -46,6 +46,7 @@ type Config struct {
 	MaxSize    uint16
 	LogFile    string
 	Storage    string
+	Scheme     string
 }
 
 func (c Config) String() string {
@@ -60,6 +61,7 @@ func (c Config) String() string {
 	s += "storage: " + c.Storage + "\n"
 	s += "max_size: " + string(c.MaxSize) + "\n"
 	s += "log_file: " + c.LogFile + "\n"
+	s += "scheme: " + c.Scheme + "\n"
 
 	return s
 
@@ -109,6 +111,8 @@ func ParseConfig(fname string, c *Config) error {
 							fmt.Fprintf(os.Stderr, "Invalid max_size value %s at line %d (max: 65535)\n",
 								fields[1], line)
 						}
+					case "scheme":
+						c.Scheme = strings.Trim(fields[1], " \t\"")
 					default:
 						fmt.Fprintf(os.Stderr, "Error reading config file %s at line %d: unknown variable '%s'\n",
 							fname, line, fields[0])
