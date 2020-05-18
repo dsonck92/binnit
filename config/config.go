@@ -60,7 +60,6 @@ func (c Config) String() string {
 	s += "storage: " + c.Storage + "\n"
 	s += "max_size: " + string(c.MaxSize) + "\n"
 	s += "log_file: " + c.LogFile + "\n"
-	s += "scheme: " + c.Scheme + "\n"
 
 	return s
 

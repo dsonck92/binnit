@@ -225,7 +225,7 @@ func init() {
 
 	logger.Println("Binnit version " + Version + " -- Starting ")
 	logger.Printf("  + Config file: %s\n", *confFile)
-	logger.Printf("  + Serving pastes on: %s\n", pConf.ServerName)
+	logger.Printf("  + Serving pastes on: %s\n", pConf.ServerPrefix)
 	logger.Printf("  + listening on: %s:%s\n", pConf.BindAddr, pConf.BindPort)
 	logger.Printf("  + paste_dir: %s\n", pConf.PasteDir)
 	logger.Printf("  + log_file: %s\n", pConf.LogFile)
