@@ -37,7 +37,7 @@ type options struct {
 }
 
 type Config struct {
-	ServerName string
+	ServerPrefix string
 	BindAddr   string
 	BindPort   string
 	PasteDir   string
@@ -46,14 +46,13 @@ type Config struct {
 	MaxSize    uint16
 	LogFile    string
 	Storage    string
-	Scheme     string
 }
 
 func (c Config) String() string {
 
 	var s string
 
-	s += "Server name: " + c.ServerName + "\n"
+	s += "Server prefix: " + c.ServerPrefix + "\n"
 	s += "Listening on: " + c.BindAddr + ":" + c.BindPort + "\n"
 	s += "paste_dir: " + c.PasteDir + "\n"
 	s += "templ_dir: " + c.TemplDir + "\n"
@@ -88,8 +87,8 @@ func ParseConfig(fname string, c *Config) error {
 					// and contains an assignment
 					fields := strings.Split(s, "=")
 					switch strings.Trim(fields[0], " \t\"") {
-					case "server_name":
-						c.ServerName = strings.Trim(fields[1], " \t\"")
+					case "server_prefix":
+						c.ServerPrefix = strings.Trim(fields[1], " \t\"")
 					case "bind_addr":
 						c.BindAddr = strings.Trim(fields[1], " \t\"")
 					case "bind_port":
@@ -111,8 +110,6 @@ func ParseConfig(fname string, c *Config) error {
 							fmt.Fprintf(os.Stderr, "Invalid max_size value %s at line %d (max: 65535)\n",
 								fields[1], line)
 						}
-					case "scheme":
-						c.Scheme = strings.Trim(fields[1], " \t\"")
 					default:
 						fmt.Fprintf(os.Stderr, "Error reading config file %s at line %d: unknown variable '%s'\n",
 							fname, line, fields[0])

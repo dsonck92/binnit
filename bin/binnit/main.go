@@ -54,7 +54,7 @@ var (
 )
 
 var pConf = cfg.Config{
-	ServerName: "localhost",
+	ServerPrefix: "http://localhost",
 	BindAddr:   "0.0.0.0",
 	BindPort:   "8080",
 	PasteDir:   "paste",
@@ -187,20 +187,13 @@ func handlePutPaste(w http.ResponseWriter, r *http.Request) {
 		logger.Printf("   ID: %s; err: %v\n", ID, err)
 
 		if err == nil {
-			scheme := pConf.Scheme
-			hostname := pConf.ServerName
-			port := pConf.BindPort
+			prefix := pConf.ServerPrefix
 			if show := reqBody.Get("show"); show != "1" {
-				fmt.Fprintf(w, "%s://%s/%s\n", scheme, hostname, ID)
+				fmt.Fprintf(w, "%s/%s\n", prefix, ID)
 				return
 			}
-			if port != string(80) && port != string(443) {
-				fmt.Fprintf(w, "<html><body>Link: <a href='%s://%s:%s/%s'>%s://%s:%s/%s</a></body></html>",
-					scheme,	hostname, port, ID, scheme, hostname, port, ID)
-				return
-			}
-			fmt.Fprintf(w, "<html><body>Link: <a href='%s://%s/%s'>%s://%s/%s</a></body></html>",
-				scheme, hostname, ID, scheme, hostname, ID)
+			fmt.Fprintf(w, "<html><body>Link: <a href='%s/%s'>%s/%s</a></body></html>",
+				prefix, ID, prefix, ID)
 			return
 
 		}
